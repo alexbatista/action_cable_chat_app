@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
-  before_action :logged_in_user
-  before_action :get_messages
-
+  before_action :logged_in_user, except: [:mypost]
+  before_action :get_messages, except: [:mypost]
+  skip_before_action :verify_authenticity_token
   def index
   end
 
@@ -14,6 +14,14 @@ class MessagesController < ApplicationController
           ActionCable.server.broadcast "room_channel_user_#{mention.id}", mention: true
       end
     end
+  end
+
+  def restTest
+    render json: Message.restMsg
+  end
+
+  def mypost
+    render json: params[:hombre].to_json
   end
 
   private
